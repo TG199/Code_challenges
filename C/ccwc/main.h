@@ -12,6 +12,7 @@
 
 
 ssize_t bytes_count(char *file);
+ssize_t chars_count(char *file);
 ssize_t word_count(char *file);
 ssize_t line_count(char *file);
 

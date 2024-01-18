@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * main - Entry point of program
@@ -10,17 +11,28 @@
 
 int main(int argc, char **argv)
 {
-	ssize_t line, word, bytes;
-	ssize_t total_lines = 0, total_words = 0, total_bytes = 0;
+	ssize_t line, word, chars, bytes;
+	ssize_t total_lines = 0, total_words = 0, total_chars = 0, total_bytes = 0;
 	char *opt;
-	char *file;
+	size_t bufsize;
+	char *file, *buffer = NULL;
 	int i;
 
 
-	if (argc < 2)
+	if (argc < 1)
 	{
 		fprintf(stderr, "Usage: %s [-options] [file] ...\n", argv[0]);
 		return (EXIT_FAILURE);
+	}
+	if (argc == 1)
+	{
+		
+		while (fgets(buffer, bufsize, stdin) != NULL)
+		{
+			if (bufsize)
+				bufsize *= 2;
+		}
+
 	}
 
 	for (i = 1; i  < argc; i++)
@@ -34,6 +46,7 @@ int main(int argc, char **argv)
 				file = argv[i + 1];
 				if (strcmp(opt, "-l") == 0)
 				{
+					
 					line = line_count(file);
 					printf("%ld %s\n", line, file);
 					total_lines += line;
@@ -43,6 +56,12 @@ int main(int argc, char **argv)
 					word = word_count(file);
 					printf("%ld %s\n", word, file);
 					total_words += word;
+				}
+				else if (strcmp(opt, "-m") == 0)
+				{
+					chars = chars_count(file);
+					printf("%ld %s\n", chars, file);
+					total_bytes += chars;
 				}
 				else if (strcmp(opt, "-c") == 0)
 				{
@@ -71,21 +90,9 @@ int main(int argc, char **argv)
 			printf("  %ld  %ld %ld %s\n", line, word, bytes, file);
 			total_lines += line;
 			total_words += word;
-			total_bytes += bytes;
+			total_chars += chars;
+			total_bytes += chars;
 		}
-	}
-	if (argc > 2)
-	{
-		opt = argv[1];
-		if (strcmp(opt, "-l") == 0)
-			printf("%ld total\n", total_lines);
-		else if (strcmp(opt, "-w") == 0)
-			printf("%ld total\n", total_words);
-		else if (strcmp(opt, "-c") == 0)
-			printf("%ld total\n", total_bytes);
-		else
-
-			printf("  %ld %ld %ld total\n", total_lines, total_words, total_bytes);
 	}
 
 	return (0);
