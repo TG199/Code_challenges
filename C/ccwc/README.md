@@ -1,3 +1,11 @@
 # Write a WC Unix CLI tool
-This project is part of john cricketts coding challenge.
-The task is to build a CLI tool that mimics the bash shell wc tool.
+This challenge is part of John cricketts coding challenge.
+The task is to build a simple version of the unix wc tool. 
+The wc tool is used for counting lines, words, characters, 
+bytes and longest in a file.
+
+The challenge is to handle a few options which include:
+	-l for lines
+	-w for words
+	-c for bytes
+	-m for characters 
