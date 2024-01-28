@@ -14,26 +14,76 @@ int main(int argc, char **argv)
 	ssize_t line, word, chars, bytes;
 	ssize_t total_lines = 0, total_words = 0, total_chars = 0, total_bytes = 0;
 	char *opt;
-	size_t bufsize;
-	char *file, *buffer = NULL;
+	char *file;
 	int i;
-
+	FILE *file2;
+	char ch;
+	char prev;
 
 	if (argc < 1)
 	{
 		fprintf(stderr, "Usage: %s [-options] [file] ...\n", argv[0]);
 		return (EXIT_FAILURE);
 	}
-	if (argc == 1)
+	if (argc > 1 && argc < 3)
 	{
-		
-		while (fgets(buffer, bufsize, stdin) != NULL)
-		{
-			if (bufsize)
-				bufsize *= 2;
-		}
 
+		if (strcmp(argv[0], "./ccwc") == 0)
+		{
+			file2 = stdin;
+			opt = argv[1];
+		 	if (strcmp(opt, "-l") == 0)
+		 	{
+				line = 0;
+				ch = fgetc(file2);
+
+				while (ch != EOF)
+				{
+					if (ch == '\n')
+						line++;
+					ch = fgetc(file2);
+				}
+				printf("%ld\n", line);
+		 	}
+		 	else if (strcmp(opt, "-w") == 0)
+		 	{
+			 	word = 0;
+				prev = ' ';
+				ch = fgetc(file2);
+
+				while (ch != EOF)
+				{
+					if (isspace(prev) && !isspace(ch))
+						word++;
+					prev = ch;
+					ch = fgetc(file2);
+				}
+			 	printf("%ld\n", word);
+		 	}
+		 	else if (strcmp(opt, "-m") == 0)
+		 	{
+				chars = 0;
+				ch = fgetc(file2);
+				while (ch != EOF)
+				{
+					if (ch > -64)
+						chars++;
+					ch = fgetc(file2);
+				}
+				printf("%ld\n", chars);
+		 	}
+		 	else if (strcmp(opt, "-c") == 0)
+		 	{
+			 	bytes = 0;
+				ch = fgetc(file2);
+				while (ch != EOF)
+					bytes++;
+
+				printf("%ld\n", bytes);
+		 	}
+		}
 	}
+
 
 	for (i = 1; i  < argc; i++)
 	{
@@ -75,6 +125,7 @@ int main(int argc, char **argv)
 				}
 				i++;
 			}
+
 			else
 			{
 				fprintf(stderr, "Missing argument for option %s\n", opt);

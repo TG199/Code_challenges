@@ -49,7 +49,7 @@ ssize_t chars_count(char *file)
 				return(-1);
 			}
 		}
-		if ((c >= 'a' && c <='z') || (c >= 'A' && c <= 'Z'))
+		if ((c > -64))
 		{
 			char_count++;
 		}
@@ -60,7 +60,3 @@ ssize_t chars_count(char *file)
 	close(fd);
 	return(char_count);
 }
-
-
-
-

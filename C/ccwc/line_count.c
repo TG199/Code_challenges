@@ -3,19 +3,20 @@
 
 /**
  * line_count - count number of linees in a file
- * @file: file to count lines
+ * @input: input to count lines
  *
  * Return: Number of lines counted
  */
-ssize_t line_count(char *file)
+ssize_t line_count(const char *input)
 {
+
 	ssize_t bufsize = 100;
 	ssize_t bytes_read, line_count;
 	char *buffer;
 	int fd;
 	char c;
 
-	if (file == NULL)
+	if (input == NULL)
 	{
 		perror("ERROR: empty file");
 		return (-1);
@@ -27,7 +28,7 @@ ssize_t line_count(char *file)
 		return (-1);
 	}
 
-	fd = open(file, O_RDONLY);
+	fd = open(input, O_RDONLY);
 
 	if (fd == -1)
 	{
@@ -63,6 +64,4 @@ ssize_t line_count(char *file)
 	free(buffer);
 	close(fd);
 	return (line_count);
-
 }
-

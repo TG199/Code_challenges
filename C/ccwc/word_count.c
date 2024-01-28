@@ -1,8 +1,5 @@
 #include "main.h"
-int _isspace(int c)
-{
-	return (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v');
-}
+
 /**
  * word_count - count words in a file
  * @file: File to count words
@@ -52,13 +49,8 @@ ssize_t word_count(char *file)
 				close(fd);
 				return (-1);
 			}
-		}/*
-		if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v')
-		{
-			space_count++;
-		}*/
-		
-		if (_isspace(c))
+		}
+		if (isspace(c))
 		{
 			in_word = 0;
 		}
@@ -66,6 +58,7 @@ ssize_t word_count(char *file)
 		{
 			in_word = 1;
 			space_count++;
+
 		}
 		buffer[bytes_read] = c;
 		bytes_read++;
