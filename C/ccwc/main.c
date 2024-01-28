@@ -77,7 +77,10 @@ int main(int argc, char **argv)
 			 	bytes = 0;
 				ch = fgetc(file2);
 				while (ch != EOF)
+				{
 					bytes++;
+					ch = fgetc(file2);
+				}
 
 				printf("%ld\n", bytes);
 		 	}
@@ -124,12 +127,6 @@ int main(int argc, char **argv)
 					fprintf(stderr, "Wrong option specified\n");
 				}
 				i++;
-			}
-
-			else
-			{
-				fprintf(stderr, "Missing argument for option %s\n", opt);
-				return (EXIT_FAILURE);
 			}
 		}
 		else
