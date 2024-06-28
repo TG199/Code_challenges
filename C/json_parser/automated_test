@@ -1,0 +1,47 @@
+#!/bin/bash
+
+TEST_FILES=$(find test_files -type f -name "*.json")
+result=result.out
+expected=expected.out
+
+confirm_delete() {
+    read -p "Do you want to delete the temp files? (yes/no): " response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            return 0 ;;
+        *)
+            return 1;;
+    esac
+}
+
+echo "testing..."
+for test_file in $TEST_FILES; do
+    printf "\ntesting file [%s]: " $test_file | tee -a $result $expected > /dev/null
+    if echo $test_file | grep -q "invalid\|fail"; then
+        printf "false\n" >> $expected
+    else
+        printf "true\n" >> $expected
+    fi;
+    ./json $test_file
+    if [ $? -eq 0 ]; then
+        printf "true\n" >> $result
+    else
+        printf "false\n" >> $result
+        echo in file $test_file
+    fi;
+done
+echo "done!"
+echo "------------------------------------------"
+echo "result"
+if diff $expected $result; then
+    echo "PASS"
+else
+    echo "FAIL"
+fi
+
+confirm_delete
+if [ $? -eq 0 ]; then
+    rm -f $expected
+    rm -f $result
+    echo temp files deleted
+fi

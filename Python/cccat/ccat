@@ -1,0 +1,42 @@
+#!/usr/bin/python3
+"""concatenate a file(s) to standard output"""
+import sys
+from option import cat_with_line, cat_with_line_b_option
+
+
+if sys.argv[1] == '-' or len(sys.argv) == 1:
+    with sys.stdin as file:
+        cat_with_line(file)
+
+elif sys.argv[1] == '-n':
+    if len(sys.argv) == 2:
+        with sys.stdin as file:
+            cat_with_line(file)
+    else:
+        for file in sys.argv[2:]:
+            try:
+                with open(file, 'r') as file:
+                    cat_with_line(file)
+            except FileNotFoundError:
+                print(f"cat: {file}: No such file or directory")
+
+elif sys.argv[1] == '-b':
+    if len(sys.argv) == 2:
+        with sys.stdin as file:
+            cat_with_line_b_option(file)
+    else:
+        for file in sys.argv[2:]:
+            try:
+                with open(file, 'r') as file:
+                    cat_with_line_b_option(file)
+            except FileNotFoundError:
+                print(f"cat: {file}: No such file or directory")
+
+else:
+    for file in sys.argv[1:]:
+        try:
+            with open(file, 'r') as file:
+                data = file.read()
+                print(data, end='')
+        except FileNotFoundError:
+            print(f"cat: {file}: No such file or directory")
