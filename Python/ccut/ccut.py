@@ -1,18 +1,27 @@
 #!/usr/bin/python3
 import sys
 import os
+""" A simple Unix Cut tool """
 
 
 delimeter = '\t'
-field_number = None
+field_numbers = None
 file_path = None
 
 
 for arg in sys.argv[1:]:
     if arg.startswith('-f'):
         try:
-            field_number = int(arg[2:])
-            if field_number < 1:
+            if '"' in arg[2:]:
+                field_numbers = arg[2:].strip('"')
+            if ',' in arg[2:]:
+                field_numbers = arg[2:].split(',')
+            elif ' ' in arg[2:]:
+                field_numbers = arg[2:].split(' ')
+            else:
+                field_numbers = [arg[2:]]
+            field_numbers = [int(i) for i in field_numbers]
+            if any(i < 1 for i in field_numbers):
                 print("Error: Invalid field number")
                 sys.exit(1)
         except ValueError:
@@ -26,20 +35,31 @@ for arg in sys.argv[1:]:
             sys.exit(1)
     else:
         file_path = arg
-if field_number is None:
-    print("Error: Missing -f option")
-    sys.exit(1)
 
-if file_path is None or not os.path.isfile(file_path):
-    print(f"Error: Cannot open file '{file_path}'")
-    sys.exit(1)
-
-with open(file_path, 'r') as file:
-    data = file.readlines()
+if file_path == '-' or file_path is None:
+    with sys.stdin as file:
+        data = file.readlines()
 
     for line in data:
         split_line = line.split(delimeter)
-        if len(split_line) < field_number:
+        if len(split_line) < max(field_numbers):
             print("Error: Field number out of range")
-        else:
-            print(split_line[field_number -1])
+            continue
+        
+        selected_fields = [split_line[num - 1] for num in field_numbers]
+
+        print(delimeter.join(selected_fields))
+
+else:
+    with open(file_path, 'r') as file:
+        data = file.readlines()
+
+        for line in data:
+            split_line = line.split(delimeter)
+            if len(split_line) < max(field_numbers):
+                print("Error: Field number out of range")
+                continue
+        
+            selected_fields = [split_line[num - 1] for num in field_numbers]
+
+            print(delimeter.join(selected_fields))
